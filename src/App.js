@@ -4,6 +4,7 @@ import './App.css';
 import Header from './Components/Header';
 import Register from './Components/RegisterForm';
 import StudentData from './Components/StudentData';
+import PaginatedStudents from './Components/PaginatedStudents';
 
 const userContext = createContext ();
 
@@ -35,6 +36,7 @@ function App() {
         </Routes>
         </userContext.Provider>
     </BrowserRouter>
+    // <PaginatedStudents/>
   );
 }
 

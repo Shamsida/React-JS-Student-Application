@@ -2,14 +2,17 @@ import React,{ useEffect} from 'react';
 import { Container, Row, Col, Button, Form} from 'react-bootstrap';
 import { useContext } from 'react';
 import { userContext } from '../App';
-import { useNavigate } from "react-router-dom";
+//import { useNavigate } from "react-router-dom";
 import axios from 'axios';
+import { ToastContainer , toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Cookies from 'js-cookie';
 
 const Register = () => {
 
     const user = useContext(userContext);
     const { input, setInput, todos, setTodos }= user.state;
-    const navigate = useNavigate();
+   // const navigate = useNavigate();
 
     useEffect(() => {
         console.log(todos)
@@ -35,15 +38,26 @@ const Register = () => {
             const course = form.course.value;
             console.log(name, age, dob, course);
         try{
-            const response = axios.post('https://localhost:7231/api/Student/PostItems',{
+            const response =await axios.post('https://localhost:7231/api/Student/PostItems',{
                 name,
                 age,
                 dob,
                 course
-            },);
+            });
+            // console.log(response,"response");
             const resData = response.data
-            console.log(resData);
-            navigate('/studentdata')
+            console.log(resData,"resData");
+            Cookies.set('token',resData)
+            // const resData1 = response.json
+            // console.log(resData1,"token");
+            setInput({
+                name : "",
+                age : "",
+                dob : "",
+                course : "",
+              });
+            toast.success("Student has been added");
+            //navigate('/studentdata')
         }
         catch(error){
             console.log(error.response.data);
@@ -52,6 +66,7 @@ const Register = () => {
 
     return (
        <Container className="">
+        <ToastContainer />
             <Row className="justify-content-center mt-5">
                 <Col style={{width:600}} xs={11} sm={10} md={8} lg={4} className={`p-4 rounded text-black bg-light`}>
                     <h1 className={`text-center border-bottom pb-3 text-light-primary`}>
@@ -63,6 +78,7 @@ const Register = () => {
                                 <Form.Control  
                                     name="name" 
                                     type="text" 
+                                    value={user.state.input.name}
                                      onChange={onInputChange}
                                     placeholder="Name" required />
                             </Form.Group>
@@ -71,7 +87,8 @@ const Register = () => {
                             <Form.Control  
                                 name="age" 
                                 type="text" 
-                                 onChange={onInputChange}
+                                value={user.state.input.age}
+                                onChange={onInputChange}
                                 placeholder="Age" required />
                         </Form.Group>
                         <Form.Group className="mb-3">
@@ -79,7 +96,8 @@ const Register = () => {
                             <Form.Control  
                                 name="dob" 
                                 type="date" 
-                                 onChange={onInputChange}
+                                value={user.state.input.dob}
+                                onChange={onInputChange}
                                 placeholder="mm/dd/yy" 
                                 minLength={3} required />
                         </Form.Group>
@@ -87,8 +105,9 @@ const Register = () => {
                             <Form.Label>Course </Form.Label>
                             <Form.Control   
                                 name="course" 
-                                type="text" 
-                                 onChange={onInputChange}
+                                type="text"
+                                value={user.state.input.course}
+                                onChange={onInputChange}
                                 placeholder="Course" required />
                         </Form.Group>
                         <div style={{display:'flex' , justifyContent:'center'}}>
